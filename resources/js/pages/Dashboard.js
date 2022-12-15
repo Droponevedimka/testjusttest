@@ -206,7 +206,7 @@ const Dashboard = () => {
                                 )}
                             </div>
                             <div className="form-group">
-                                <label htmlFor="addArticle">Content</label>
+                                <label htmlFor="addArticle">Description</label>
                                 <textarea
                                     name="content"
                                     id="content"
@@ -215,7 +215,7 @@ const Dashboard = () => {
                                     maxLength={1000}
                                     minLength={20}
                                     className="form-control mr-3"
-                                    placeholder="Build a напоминание."
+                                    placeholder="Build a Description."
                                     onChange={handleChange}
                                     value={stateForm.content}
                                     ref={register()}
@@ -227,7 +227,7 @@ const Dashboard = () => {
                                     </span>
                                 )}
                             </div>
-                            <div className="form-group">
+                            {/* <div className="form-group">
                                 <label htmlFor="image_url">Image Url</label>
                                 <input
                                     id="image_url"
@@ -241,11 +241,11 @@ const Dashboard = () => {
                                     value={stateForm.image_url}
                                     ref={register()}
                                 />
-                            </div>
+                            </div> */}
                             <div className="row">
                                 <div className="col">
                                     <div className="form-group">
-                                        <label htmlFor="slug">Date</label>
+                                        <label htmlFor="slug">remind</label>
                                         <input
                                             id="slug"
                                             name="slug"
@@ -259,7 +259,7 @@ const Dashboard = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="col">
+                                {/* <div className="col">
                                     <label htmlFor="category">
                                         Select a Category
                                     </label>
@@ -274,7 +274,7 @@ const Dashboard = () => {
                                             stateForm={stateForm}
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <button
                                 type="submit"
@@ -297,10 +297,10 @@ const Dashboard = () => {
                             <tbody>
                                 <tr>
                                     <th>Title</th>
-                                    <th>Content</th>
-                                    <th>Image</th>
+                                    <th>Description</th>
+                                    {/* <th>Image</th> */}
                                     <th>Date</th>
-                                    <th>Category</th>
+                                    {/* <th>Category</th> */}
                                     <th>Approve</th>
                                     <th>Delete</th>
                                     <th>Edit</th>
@@ -314,23 +314,23 @@ const Dashboard = () => {
                                                     .slice(0, 30)
                                                     .concat("...")}
                                             </td>
-                                            <td>
+                                            {/* <td>
                                                 <img
                                                     src={article.image_url}
                                                     className="rounded mx-auto d-block"
                                                     alt={article.slug}
                                                 ></img>
-                                            </td>
+                                            </td> */}
                                             <td>
                                                 <span className="badge badge-success">
                                                     {article.slug}
                                                 </span>
                                             </td>
-                                            <td>
+                                            {/* <td>
                                                 <span className="badge badge-warning">
                                                     {article.cat_id.label}
                                                 </span>
-                                            </td>
+                                            </td> */}
                                             <td>
                                                 <span
                                                     type="button"

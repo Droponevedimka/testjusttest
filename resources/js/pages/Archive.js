@@ -6,6 +6,7 @@ import Http from "../Http";
 import Article from "../components/Article";
 import Alert from "../components/Alert";
 import CommentBox from "../components/CommentBox";
+import ReactPaginate from 'react-paginate';
 
 const api = "/api/v1/reminder";
 
@@ -18,7 +19,20 @@ const Archive = () => {
     const [moreLoaded, setMoreLoaded] = useState(false);
     const [apiMore, setApiMore] = useState(false);
     const [error, setError] = useState(false);
+
+
     const [articleState, setArticle] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+    const [postsPerPage] = useState(3);
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const [filterPosts, setFilterPosts] = useState({});
+    const currentPosts = responseState.slice(indexOfFirstPost, indexOfLastPost);
+    
+    const paginate = ({ selected }) => {
+        setCurrentPage(selected + 1);
+    };
+
 
     useEffect(() => {
         Http.get(api)
@@ -27,6 +41,7 @@ const Archive = () => {
                 console.log(data);
                 const apiM = response.data?.links?.next;
                 setResponseState(data);
+                setFilterPosts(data);
                 setLoading(false);
                 setError(false);
                 setApiMore(apiM);
@@ -58,10 +73,15 @@ const Archive = () => {
             });
     };
 
+    const onTextChanged = (e) =>{
+        setFilterPosts(responseState.filter(g => {
+           return g.content.toLowerCase().search(e.target.value.trim().toLowerCase()) !== -1
+        }));
+    }
+
     return (
         <div className="container py-5">
             <h1 className="text-center mb-4">Все события</h1>
-
             {error && (
                 <div className="text-center">
                     <p>{error}</p>
@@ -74,15 +94,17 @@ const Archive = () => {
                         {articleState.id && articleState.content ? (
                             <>
                                 <Article article={articleState} />
-                                <CommentBox article_id={articleState.id} />
+                                {/* <CommentBox article_id={articleState.id} /> */}
                             </>
                         ) : (
                             <Alert />
                         )}
                     </div>
                     <div className="col-4">
-                        {responseState.length > 0 &&
-                            responseState.map(
+                        <input placeholder="Поиск" onChange={onTextChanged} />
+                        
+                        {filterPosts.length > 0 &&
+                            filterPosts.map(
                                 (article) =>
                                     article.id &&
                                     article.content?.length > 0 && (
@@ -90,13 +112,13 @@ const Archive = () => {
                                             className="card my-2"
                                             key={article.id}
                                         >
-                                            <img
+                                            {/* <img
                                                 className="card-img-top"
                                                 src={
                                                     article?.image_url ?? image
                                                 }
                                                 alt={article?.slug}
-                                            />
+                                            /> */}
 
                                             <div className="card-body">
                                                 <h5 className="card-title">
@@ -113,7 +135,7 @@ const Archive = () => {
                                                         handleClick(article)
                                                     }
                                                 >
-                                                    See more!
+                                                    Подробнее
                                                 </a>
 
                                                 <div className="container py-2">
@@ -121,18 +143,31 @@ const Archive = () => {
                                                         <span className="badge badge-success mx-auto">
                                                             {article?.slug}
                                                         </span>
-                                                        <span className="badge badge-warning mx-auto">
+                                                        {/* <span className="badge badge-warning mx-auto">
                                                             {
                                                                 article?.cat_id
                                                                     ?.label
                                                             }
-                                                        </span>
+                                                        </span> */}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     )
                             )}
+                    
+                    <ReactPaginate
+                        onPageChange={paginate}
+                        pageCount={Math.ceil(filterPosts.length / postsPerPage)}
+                        previousLabel={'Prev'}
+                        nextLabel={'Next'}
+                        containerClassName={'pagination'}
+                        pageLinkClassName={'page-number'}
+                        previousLinkClassName={'page-number'}
+                        nextLinkClassName={'page-number'}
+                        activeLinkClassName={'active'}
+                    />
+                    
                     </div>
                 </div>
             </div>

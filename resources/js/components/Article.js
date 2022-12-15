@@ -29,6 +29,17 @@ const Article = ({ article }) => {
         }
     }, [id]);
 
+    const sendTelegram = (e) => {
+        Http.get(`https://telegram-api.dropo.info/start.php?msg=Напоминание ${e.title} ${e.desc}`).then((response) => {
+            const { data } = response.data;
+            console.log(data);            
+        })
+        .catch((err) => {
+            console.log(err);
+            setLike(false);
+        });
+    }
+
     const toggle = () => {
         setLike(!like);
         setData({ like: !like, ...dataState });
@@ -61,7 +72,7 @@ const Article = ({ article }) => {
                     {error}
                 </div>
             )}
-            <img className="card-img-top" src={image_url} alt={slug} />
+            {/* <img className="card-img-top" src={image_url} alt={slug} /> */}
             <div className="card-body">
                 <h5 className="card-title">{title}</h5>
                 <p className="card-text">{content}</p>
@@ -82,6 +93,12 @@ const Article = ({ article }) => {
                             ) : (
                                 <FontAwesomeIcon icon={faHeartBroken} />
                             )}
+                        </div>
+                    </center>
+
+                    <center style={{paddingTop: "2em", cursor: 'pointer' }}>
+                        <div onClick={sendTelegram.bind(this, {'title': title, 'desc': content})}> 
+                            отправить оповещение в телеграм
                         </div>
                     </center>
                 </div>
