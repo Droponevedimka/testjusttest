@@ -16057,19 +16057,24 @@ var Archive = function Archive() {
       currentPage = _useState14[0],
       setCurrentPage = _useState14[1];
 
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(3),
-      _useState16 = _slicedToArray(_useState15, 1),
-      postsPerPage = _useState16[0];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+      _useState16 = _slicedToArray(_useState15, 2),
+      currentTypeSort = _useState16[0],
+      setCurrentTypeSort = _useState16[1];
+
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(3),
+      _useState18 = _slicedToArray(_useState17, 1),
+      postsPerPage = _useState18[0];
 
   var indexOfLastPost = currentPage * postsPerPage;
   var indexOfFirstPost = indexOfLastPost - postsPerPage;
 
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({}),
-      _useState18 = _slicedToArray(_useState17, 2),
-      filterPosts = _useState18[0],
-      setFilterPosts = _useState18[1];
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]),
+      _useState20 = _slicedToArray(_useState19, 2),
+      filterPosts = _useState20[0],
+      setFilterPosts = _useState20[1];
 
-  var currentPosts = responseState.slice(indexOfFirstPost, indexOfLastPost);
+  var currentPosts = currentTypeSort ? filterPosts.slice(indexOfFirstPost, indexOfLastPost).reverse() : filterPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   var paginate = function paginate(_ref) {
     var selected = _ref.selected;
@@ -16114,9 +16119,14 @@ var Archive = function Archive() {
   };
 
   var onTextChanged = function onTextChanged(e) {
-    setFilterPosts(responseState.filter(function (g) {
+    var buffer = responseState.filter(function (g) {
       return g.content.toLowerCase().search(e.target.value.trim().toLowerCase()) !== -1;
-    }));
+    });
+    setFilterPosts(buffer);
+  };
+
+  var changeSort = function changeSort(e) {
+    e.target.value == 'time' ? setCurrentTypeSort(true) : setCurrentTypeSort(false);
   };
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -16145,7 +16155,21 @@ var Archive = function Archive() {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", {
             placeholder: "\u041F\u043E\u0438\u0441\u043A",
             onChange: onTextChanged
-          }), ";", filterPosts.length > 0 && filterPosts.map(function (article) {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("center", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              children: " \u0421\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("select", {
+              id: "pet-select",
+              onChange: changeSort,
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+                value: "date",
+                children: "\u041F\u043E \u0434\u0430\u0442\u0435"
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
+                value: "time",
+                children: "\u041F\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0438"
+              })]
+            })]
+          }), currentPosts.length > 0 && currentPosts.map(function (article) {
             var _article$content;
 
             return article.id && ((_article$content = article.content) === null || _article$content === void 0 ? void 0 : _article$content.length) > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {

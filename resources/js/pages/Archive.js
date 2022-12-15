@@ -23,11 +23,12 @@ const Archive = () => {
 
     const [articleState, setArticle] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentTypeSort, setCurrentTypeSort] = useState(false);
     const [postsPerPage] = useState(3);
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const [filterPosts, setFilterPosts] = useState({});
-    const currentPosts = responseState.slice(indexOfFirstPost, indexOfLastPost);
+    const [filterPosts, setFilterPosts] = useState([]);
+    const currentPosts = currentTypeSort ? filterPosts.slice(indexOfFirstPost, indexOfLastPost).reverse() : filterPosts.slice(indexOfFirstPost, indexOfLastPost);
     
     const paginate = ({ selected }) => {
         setCurrentPage(selected + 1);
@@ -74,9 +75,15 @@ const Archive = () => {
     };
 
     const onTextChanged = (e) =>{
-        setFilterPosts(responseState.filter(g => {
-           return g.content.toLowerCase().search(e.target.value.trim().toLowerCase()) !== -1
-        }));
+        let buffer = responseState.filter(g => {
+            return g.content.toLowerCase().search(e.target.value.trim().toLowerCase()) !== -1
+        });
+
+        setFilterPosts(buffer);
+    }
+
+    const changeSort = (e) => {
+        e.target.value == 'time' ? setCurrentTypeSort(true) : setCurrentTypeSort(false)
     }
 
     return (
@@ -102,9 +109,17 @@ const Archive = () => {
                     </div>
                     <div className="col-4">
                         <input placeholder="Поиск" onChange={onTextChanged} />
+                        <center>
+                            <div> Сортировать</div>
+                            <select id="pet-select" onChange={changeSort}>
+                                <option value="date">По дате</option>
+                                <option value="time">По времени</option>                               
+                            </select>
+                        </center>
                         
-                        {filterPosts.length > 0 &&
-                            filterPosts.map(
+                        
+                        {currentPosts.length > 0 &&
+                            currentPosts.map(
                                 (article) =>
                                     article.id &&
                                     article.content?.length > 0 && (
